@@ -1,5 +1,4 @@
 const OrderModel = require("../models/Order");
-const OrderDetailModel = require("../models/OrderDetails");
 
 exports.getAllOrders = (req, res) => {
   OrderModel.find({})
@@ -66,8 +65,7 @@ exports.getOrderWithDetails = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    const orderDetails = await OrderDetailModel.find({ order: orderId });
-    res.json({ order, orderDetails });
+    res.json(order);
   } catch (err) {
     res
       .status(500)
@@ -84,23 +82,17 @@ exports.createOrderWithDetails = async (req, res) => {
       orderDate,
       totalPrice,
       customerID,
+      orderDetails: items.map((item) => ({
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+        subTotal: item.quantity * item.price,
+      })),
     });
 
     await newOrder.save();
 
-    const orderDetails = items.map((item) => ({
-      order: newOrder._id,
-      productName: item.name,
-      quantity: item.quantity,
-      price: item.price,
-    }));
-
-    const savedOrderDetails = await OrderDetailModel.insertMany(orderDetails);
-
-    newOrder.orderDetails = savedOrderDetails.map((detail) => detail._id);
-    await newOrder.save();
-
-    res.status(201).json({ order: newOrder, orderDetails: savedOrderDetails });
+    res.status(201).json(newOrder);
   } catch (err) {
     res
       .status(500)
