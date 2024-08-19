@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const CustomerSchema = new mongoose.Schema({
-  customer_ID: {
-    type: String,
-    required: true,
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: mongoose.Types.ObjectId,
   },
   fName: {
     type: String,
@@ -27,5 +27,5 @@ const CustomerSchema = new mongoose.Schema({
   },
 });
 
-const CustomerModel = mongoose.model("Customer", CustomerSchema, "customer"); // Specify the exact collection name here
+const CustomerModel = mongoose.model("Customer", CustomerSchema, "customer");
 module.exports = CustomerModel;
