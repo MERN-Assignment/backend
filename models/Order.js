@@ -4,6 +4,7 @@ const OrderSchema = new mongoose.Schema({
   orderID: {
     type: String,
     required: true,
+    unique: true,
   },
   orderDate: {
     type: Date,
@@ -13,15 +14,25 @@ const OrderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  customerID: {
+  customer_ID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Customer",
+    ref: "Customer", // Ensure that this references the correct model
     required: true,
   },
   orderDetails: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "OrderDetail",
+      productName: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
   ],
 });
