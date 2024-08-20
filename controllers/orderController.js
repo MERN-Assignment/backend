@@ -61,7 +61,7 @@ exports.deleteOrder = (req, res) => {
 exports.getOrderWithDetails = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await OrderModel.findById(orderId).populate("customerID");
+    const order = await OrderModel.findById(orderId).populate("customer_ID"); // Populate customer details
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
@@ -75,13 +75,13 @@ exports.getOrderWithDetails = async (req, res) => {
 
 exports.createOrderWithDetails = async (req, res) => {
   try {
-    const { orderID, orderDate, totalPrice, customerID, items } = req.body;
+    const { orderID, orderDate, totalPrice, customer_ID, items } = req.body;
 
     const newOrder = new OrderModel({
       orderID,
       orderDate,
       totalPrice,
-      customerID,
+      customer_ID,
       orderDetails: items.map((item) => ({
         productName: item.productName,
         quantity: item.quantity,

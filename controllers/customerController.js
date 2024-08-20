@@ -35,6 +35,21 @@ exports.getCustomerById = (req, res) => {
     });
 };
 
+// This function fetches a customer by the custom customerID string
+exports.getCustomerByCustomID = (req, res) => {
+  const customID = req.params.customID;
+  CustomerModel.findOne({ customerID: customID })
+    .then((customer) => {
+      if (!customer) {
+        return res.status(404).json({ message: "Customer not found" });
+      }
+      res.json(customer);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to fetch customer", details: err });
+    });
+};
+
 exports.updateCustomer = (req, res) => {
   const id = req.params.id;
   const updatedCustomer = req.body;
