@@ -16,7 +16,7 @@ const OrderSchema = new mongoose.Schema({
   },
   customer_ID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "customer",
+    ref: "Customer", // Ensure that this references the correct model
     required: true,
   },
   orderDetails: [
