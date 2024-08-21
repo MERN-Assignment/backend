@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const customerRoutes = require("./routes/customerRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ mongoose
 
 app.use("/api/customers", customerRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/products", productRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
