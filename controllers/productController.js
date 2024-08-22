@@ -11,21 +11,19 @@ exports.getAllProducts = (req, res) => {
     });
 };
 
-// controllers/productController.js
-exports.createProduct = (req, res) => {
-  const { productName, sellingPrice, quantity, categoryID } = req.body;
+exports.createOrUpdateProduct = (req, res) => {
+  const { productID, productName, quantity, categoryID } = req.body;
 
-  // Create a new product instance
-  const newProduct = new ProductModel({
-    productName,
-    sellingPrice,
-    quantity,
-    categoryID,
-  });
-
-  // Save the product to the database
-  newProduct
-    .save()
-    .then((product) => res.status(201).json(product))
+  // Use findOneAndUpdate to update if product exists, or create a new one if it doesn't
+  ProductModel.findOneAndUpdate(
+    { productID: productID }, // Query to find the existing product by productID
+    {
+      productName: productName,
+      quantity: quantity,
+      categoryID: categoryID,
+    },
+    { new: true, upsert: true } // Create a new product if not found, and return the updated/new document
+  )
+    .then((product) => res.status(200).json(product))
     .catch((err) => res.status(500).json({ error: err.message }));
 };
