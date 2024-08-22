@@ -35,7 +35,6 @@ exports.getCustomerById = (req, res) => {
     });
 };
 
-// This function fetches a customer by the custom customerID string
 exports.getCustomerByCustomID = (req, res) => {
   const customID = req.params.customID;
   CustomerModel.findOne({ customerID: customID })
