@@ -27,3 +27,60 @@ exports.createOrUpdateProduct = (req, res) => {
     .then((product) => res.status(200).json(product))
     .catch((err) => res.status(500).json({ error: err.message }));
 };
+
+exports.getProductById = (req, res) => {
+  const id = req.params.id;
+  ProductModel.findById(id)
+    .then((product) => {
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json(product);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to fetch product", details: err });
+    });
+};
+
+exports.getProductByCustomID = (req, res) => {
+  const customID = req.params.customID;
+  ProductModel.findOne({ productID: customID })
+    .then((product) => {
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json(product);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to fetch product", details: err });
+    });
+};
+
+exports.updateProduct = (req, res) => {
+  const id = req.params.id;
+  const { productID, productName, quantity } = req.body;
+
+  const updatedProduct = {
+    ...(productID && { productID }),
+    ...(productName && { productName }),
+    ...(quantity && { quantity }),
+  };
+
+  ProductModel.findByIdAndUpdate(id, updatedProduct, { new: true })
+    .then((result) => res.json(result))
+    .catch((err) =>
+      res.status(500).json({ error: "Failed to update product", details: err })
+    );
+};
+
+exports.deleteProduct = (req, res) => {
+  const id = req.params.id;
+  ProductModel.findByIdAndDelete(id)
+    .then((deletedProduct) => {
+      if (!deletedProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json({ message: "Product deleted successfully", deletedProduct });
+    })
+    .catch((err) => res.status(500).json({ error: err.message }));
+};
