@@ -84,3 +84,23 @@ exports.deleteProduct = (req, res) => {
     })
     .catch((err) => res.status(500).json({ error: err.message }));
 };
+
+exports.createInventory = (req, res) => {
+  const { productID, sellingPrice, date} = req.body;
+
+  // Check if the product exists and then update it
+  ProductModel.findOneAndUpdate(
+    { productID: productID }, // Query to find the product by productID
+    { sellingPrice: sellingPrice, date: date}, // Update the date, sellingPrice, and quantity
+    { new: true } // Return the updated product document
+  )
+    .then((updatedProduct) => {
+      if (!updatedProduct) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+      return res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Failed to update product', details: err.message });
+    });
+};
