@@ -18,6 +18,10 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  date: {
+    type: Date,
+    required: true,
+  },
   categoryID: {
     type: String,
     ref: "Category", // Ensure that this references the correct model
