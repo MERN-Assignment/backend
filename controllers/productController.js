@@ -104,3 +104,23 @@ exports.createInventory = (req, res) => {
       res.status(500).json({ error: 'Failed to update product', details: err.message });
     });
 };
+
+exports.updateInventory = (req, res) => {
+  const id = req.params.id;
+  const { productID, productName, quantity, sellingPrice } = req.body;
+
+  const updatedProduct = {
+    ...(productID && { productID }),
+    ...(productName && { productName }),
+    ...(quantity && { quantity }),
+    ...(sellingPrice && { sellingPrice }),
+  };
+
+  ProductModel.findByIdAndUpdate(id, updatedProduct, { new: true })
+    .then((result) => res.json(result))
+    .catch((err) =>
+      res.status(500).json({ error: "Failed to update product", details: err })
+    );
+};
+
+
