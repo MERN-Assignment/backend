@@ -6,6 +6,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const EmployeeManagerRoutes = require("./routes/Employee-ManagerRoutes");
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,14 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/employees", EmployeeManagerRoutes);
+
+app.use((req, res, next) => {
+  console.log("Accessed2");
+  next();
+});
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
