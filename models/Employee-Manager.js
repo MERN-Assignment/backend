@@ -14,7 +14,7 @@ const employeeManagerSchema = new mongoose.Schema({
 });
 
 
-const EmployeeManagerModel = mongoose.model('EmployeeManager', employeeManagerSchema, 'employee-manager');
+const EmployeeManagerModel = mongoose.model('EmployeeManager', employeeManagerSchema, 'Authentications');
 
 module.exports = EmployeeManagerModel;
 // Compare this snippet from backend/models/Employee-Manager.js:
