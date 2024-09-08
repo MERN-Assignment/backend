@@ -13,7 +13,14 @@ exports.getAllCustomers = (req, res) => {
 exports.createCustomer = async (req, res) => {
   try {
     const customer = req.body;
-    const newCustomer = new CustomerModel(customer);
+    const lastCustomer = await CustomerModel.findOne().sort({ customer_ID: -1 });
+    const lastID = lastCustomer ? lastCustomer.customer_ID : "c";
+    const lastIDNumber = parseInt(lastID.substring(1));
+    const newCustomerID = `c${lastIDNumber + 1}`;
+    const newCustomer = new CustomerModel({
+      ...customer,
+      customer_ID: newCustomerID
+    });
     await newCustomer.save();
     res.status(201).json(newCustomer);
   } catch (err) {
