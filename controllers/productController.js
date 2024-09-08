@@ -86,22 +86,26 @@ exports.deleteProduct = (req, res) => {
 };
 
 exports.createInventory = (req, res) => {
-  const { productID, sellingPrice, date} = req.body;
+  const { productID, sellingPrice, date } = req.body;
 
   // Check if the product exists and then update it
   ProductModel.findOneAndUpdate(
     { productID: productID }, // Query to find the product by productID
-    { sellingPrice: sellingPrice, date: date}, // Update the date, sellingPrice, and quantity
+    { sellingPrice: sellingPrice, date: date }, // Update the date, sellingPrice, and quantity
     { new: true } // Return the updated product document
   )
     .then((updatedProduct) => {
       if (!updatedProduct) {
-        return res.status(404).json({ message: 'Product not found' });
+        return res.status(404).json({ message: "Product not found" });
       }
-      return res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+      return res
+        .status(200)
+        .json({ message: "Product updated successfully", updatedProduct });
     })
     .catch((err) => {
-      res.status(500).json({ error: 'Failed to update product', details: err.message });
+      res
+        .status(500)
+        .json({ error: "Failed to update product", details: err.message });
     });
 };
 
@@ -123,4 +127,26 @@ exports.updateInventory = (req, res) => {
     );
 };
 
+exports.checkProductAvailability = async (req, res) => {
+  const { productName, quantity } = req.params;
 
+  try {
+    const product = await ProductModel.findOne({ productName: productName });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (product.quantity < quantity) {
+      return res.status(400).json({ message: "Insufficient quantity" });
+    }
+
+    res.json({
+      price: product.sellingPrice,
+      availableQuantity: product.quantity,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error checking product availability", err });
+  }
+};

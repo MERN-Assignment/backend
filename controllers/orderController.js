@@ -12,9 +12,25 @@ exports.getAllOrders = (req, res) => {
 
 exports.createOrder = async (req, res) => {
   try {
-    const order = req.body;
+    // Step 1: Find the latest order by orderID
+    const latestOrder = await OrderModel.findOne({})
+      .sort({ orderID: -1 })
+      .exec();
+
+    // Step 2: Extract the number from the last orderID and increment it
+    let nextOrderID = "ord10"; // Default starting point if no orders exist
+
+    if (latestOrder) {
+      const lastOrderID = latestOrder.orderID; // e.g., "ord10"
+      const orderNumber = parseInt(lastOrderID.replace("ord", "")); // Extract the number part
+      nextOrderID = `ord${orderNumber + 1}`; // Increment the number
+    }
+
+    // Step 3: Create the new order with the incremented orderID
+    const order = { ...req.body, orderID: nextOrderID };
     const newOrder = new OrderModel(order);
     await newOrder.save();
+
     res.status(201).json(newOrder);
   } catch (err) {
     res.status(500).json({ error: "Failed to create order", details: err });
