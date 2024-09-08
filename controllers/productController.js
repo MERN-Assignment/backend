@@ -13,6 +13,7 @@ exports.getAllProducts = (req, res) => {
 
 exports.createOrUpdateProduct = (req, res) => {
   const { productID, productName, quantity, categoryID } = req.body;
+  const currentDate = new Date();
 
   // Use findOneAndUpdate to update if product exists, or create a new one if it doesn't
   ProductModel.findOneAndUpdate(
@@ -21,6 +22,7 @@ exports.createOrUpdateProduct = (req, res) => {
       productName: productName,
       quantity: quantity,
       categoryID: categoryID,
+      date: currentDate,
     },
     { new: true, upsert: true } // Create a new product if not found, and return the updated/new document
   )
