@@ -86,14 +86,13 @@ exports.deleteProduct = (req, res) => {
 };
 
 exports.createInventory = (req, res) => {
-  const { productID, sellingPrice, date } = req.body;
+  const { productID, sellingPrice, date, quantity } = req.body;
+ProductModel.findOneAndUpdate(
+  { productID: productID },
+  { sellingPrice, date, quantity },  // Add quantity here
+  { new: true }
+)
 
-  // Check if the product exists and then update it
-  ProductModel.findOneAndUpdate(
-    { productID: productID }, // Query to find the product by productID
-    { sellingPrice: sellingPrice, date: date }, // Update the date, sellingPrice, and quantity
-    { new: true } // Return the updated product document
-  )
     .then((updatedProduct) => {
       if (!updatedProduct) {
         return res.status(404).json({ message: "Product not found" });
