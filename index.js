@@ -7,6 +7,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const EmployeeManagerRoutes = require("./routes/Employee-ManagerRoutes");
+const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
   });
-
+app.use("/api", authMiddleware);
 app.use("/api/customers", customerRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
